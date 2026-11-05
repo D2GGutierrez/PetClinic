@@ -252,4 +252,55 @@ public class VisitServiceMockitoTest {
         Mockito.verify(this.repository, Mockito.times(1)).deleteById(ID);
     }
 
+
+    @Test
+    public void testCalculateTotalCostByPet() {
+
+        int PET_ID = 7;
+
+        Visit visit1 = new Visit(1, 7, 2, LocalDate.of(2010, 3, 4), "rabies shot", new BigDecimal("45.00"));
+        Visit visit4 = new Visit(4, 7, 3, LocalDate.of(2008, 9, 4), "spayed", new BigDecimal("275.00"));
+
+        Mockito.when(this.repository.findByPetId(PET_ID))
+                .thenReturn(List.of(visit1, visit4));
+
+        BigDecimal total = this.visitService.calculateTotalCostByPet(PET_ID);
+
+        log.info("Total cost: {}", total);
+
+        assertEquals(new BigDecimal("320.00"), total);
+
+        Mockito.verify(this.repository, Mockito.times(1)).findByPetId(PET_ID);
+    }
+
+    @Test
+    public void testCalculateTotalCostByPet_NoVisits() {
+
+        int PET_ID = 99;
+
+        Mockito.when(this.repository.findByPetId(PET_ID))
+                .thenReturn(List.of());
+
+        BigDecimal total = this.visitService.calculateTotalCostByPet(PET_ID);
+
+        log.info("Total cost: {}", total);
+
+        assertEquals(BigDecimal.ZERO, total);
+
+        Mockito.verify(this.repository, Mockito.times(1)).findByPetId(PET_ID);
+    }
+
+    @Test
+    public void testFindVisitById_NotFound() {
+
+        Integer ID = 9999;
+
+        Mockito.when(this.repository.findById(ID))
+                .thenReturn(Optional.empty());
+
+        assertThrows(VisitNotFoundException.class, () -> this.visitService.findById(ID));
+
+        Mockito.verify(this.repository, Mockito.times(1)).findById(ID);
+    }
+
 }
