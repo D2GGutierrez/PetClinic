@@ -2,7 +2,10 @@ package com.tecsup.petclinic.util;
 
 import com.tecsup.petclinic.dtos.PetDTO;
 import com.tecsup.petclinic.entities.Pet;
+import com.tecsup.petclinic.entities.Visit;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,5 +82,46 @@ public class TObjectCreator {
 		pets.add(new Pet(12,"Lucky",2,10, null));
 		pets.add(new Pet(13,"Sly",1,10, null));
 		return pets;
+	}
+
+	// ===================== VISIT =====================
+
+	/**
+	 * Visita existente: replica el registro id=1 de data.sql.
+	 */
+	public static Visit getVisit() {
+		return new Visit(1, 7, 2, LocalDate.of(2010, 3, 4), "rabies shot", new BigDecimal("45.00"));
+	}
+
+	/**
+	 * Visita nueva, todavia sin id (tal como llega antes de guardarse).
+	 */
+	public static Visit newVisit() {
+		Visit newEntity = new Visit();
+		newEntity.setPetId(1);
+		newEntity.setVetId(1);
+		newEntity.setVisitDate(LocalDate.of(2024, 5, 10));
+		newEntity.setDescription("general checkup");
+		newEntity.setCost(new BigDecimal("65.00"));
+		return newEntity;
+	}
+
+	/**
+	 * La misma visita, pero con el id que le asignaria la base de datos.
+	 */
+	public static Visit newVisitCreated() {
+		Visit visit = newVisit();
+		visit.setId(1000);
+		return visit;
+	}
+
+	public static Visit newVisitForUpdate() {
+		return new Visit(null, 1, 1, LocalDate.of(2024, 6, 1), "vaccination", new BigDecimal("80.00"));
+	}
+
+	public static Visit newVisitCreatedForUpdate() {
+		Visit visit = newVisitForUpdate();
+		visit.setId(4000);
+		return visit;
 	}
 }
