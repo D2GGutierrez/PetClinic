@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -69,6 +71,15 @@ public class VisitServiceImpl implements VisitService {
 			throw new VisitNotFoundException("Record not found...!");
 
 		visitRepository.deleteById(id);
+	}
+
+	@Override
+	public BigDecimal calculateTotalCostByPet(int petId) {
+		return visitRepository.findByPetId(petId)
+				.stream()
+				.map(Visit::getCost)
+				.filter(Objects::nonNull)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 }

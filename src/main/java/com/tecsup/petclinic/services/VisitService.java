@@ -3,6 +3,7 @@ package com.tecsup.petclinic.services;
 import com.tecsup.petclinic.dtos.VisitDTO;
 import com.tecsup.petclinic.exceptions.VisitNotFoundException;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface VisitService {
@@ -37,4 +38,6 @@ public interface VisitService {
 	List<VisitDTO> findByVetId(Integer vetId);
 
 	void delete(Integer id) throws VisitNotFoundException;
+
+	BigDecimal calculateTotalCostByPet(int petId);
 }
