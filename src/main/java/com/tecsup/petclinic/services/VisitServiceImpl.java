@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,6 +45,30 @@ public class VisitServiceImpl implements VisitService {
 			throw new VisitNotFoundException("Record not found...!");
 
 		return this.visitMapper.mapToDto(visit.get());
+	}
+
+	@Override
+	public List<VisitDTO> findByPetId(int petId) {
+		return visitRepository.findByPetId(petId)
+				.stream()
+				.map(visitMapper::mapToDto)
+				.toList();
+	}
+
+	@Override
+	public List<VisitDTO> findByVetId(Integer vetId) {
+		return visitRepository.findByVetId(vetId)
+				.stream()
+				.map(visitMapper::mapToDto)
+				.toList();
+	}
+
+	@Override
+	public void delete(Integer id) throws VisitNotFoundException {
+		if (!visitRepository.findById(id).isPresent())
+			throw new VisitNotFoundException("Record not found...!");
+
+		visitRepository.deleteById(id);
 	}
 
 }

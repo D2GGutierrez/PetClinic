@@ -3,6 +3,8 @@ package com.tecsup.petclinic.services;
 import com.tecsup.petclinic.dtos.VisitDTO;
 import com.tecsup.petclinic.exceptions.VisitNotFoundException;
 
+import java.util.List;
+
 public interface VisitService {
 
 	/**
@@ -30,4 +32,9 @@ public interface VisitService {
 	 */
 	VisitDTO findById(Integer id) throws VisitNotFoundException;
 
+	List<VisitDTO> findByPetId(int petId);
+
+	List<VisitDTO> findByVetId(Integer vetId);
+
+	void delete(Integer id) throws VisitNotFoundException;
 }
