@@ -15,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -183,6 +184,72 @@ public class VisitServiceMockitoTest {
 
         // Se consulto al repositorio exactamente una vez con el id pedido.
         Mockito.verify(this.repository, Mockito.times(1)).findById(ID);
+    }
+
+    @Test
+    public void testFindByPetId() {
+
+        int PET_ID = 7;
+
+        Visit visit1 = new Visit(1, 7, 2, LocalDate.of(2010, 3, 4), "rabies shot", new BigDecimal("45.00"));
+        Visit visit4 = new Visit(4, 7, 3, LocalDate.of(2008, 9, 4), "spayed", new BigDecimal("275.00"));
+
+        Mockito.when(this.repository.findByPetId(PET_ID))
+                .thenReturn(List.of(visit1, visit4));
+
+        List<VisitDTO> visits = this.visitService.findByPetId(PET_ID);
+
+        log.info("{}", visits);
+
+        assertEquals(2, visits.size());
+        assertEquals(1, visits.get(0).getId());
+        assertEquals(4, visits.get(1).getId());
+        visits.forEach(v -> assertEquals(PET_ID, v.getPetId()));
+
+        Mockito.verify(this.repository, Mockito.times(1)).findByPetId(PET_ID);
+    }
+
+    @Test
+    public void testFindByVetId() {
+
+        Integer VET_ID = 2;
+
+        Visit visit1 = new Visit(1, 7, 2, LocalDate.of(2010, 3, 4), "rabies shot", new BigDecimal("45.00"));
+        Visit visit2 = new Visit(2, 8, 2, LocalDate.of(2011, 3, 4), "rabies shot", new BigDecimal("45.00"));
+
+        Mockito.when(this.repository.findByVetId(VET_ID))
+                .thenReturn(List.of(visit1, visit2));
+
+        List<VisitDTO> visits = this.visitService.findByVetId(VET_ID);
+
+        log.info("{}", visits);
+
+        assertEquals(2, visits.size());
+        assertEquals(1, visits.get(0).getId());
+        assertEquals(2, visits.get(1).getId());
+        visits.forEach(v -> assertEquals(VET_ID, v.getVetId()));
+
+        Mockito.verify(this.repository, Mockito.times(1)).findByVetId(VET_ID);
+    }
+
+    @Test
+    public void testDeleteVisit() {
+
+        Integer ID = 1;
+
+        Visit visit = new Visit(1, 7, 2, LocalDate.of(2010, 3, 4), "rabies shot", new BigDecimal("45.00"));
+
+        Mockito.when(this.repository.findById(ID))
+                .thenReturn(Optional.of(visit));
+
+        try {
+            this.visitService.delete(ID);
+        } catch (VisitNotFoundException e) {
+            fail(e.getMessage());
+        }
+
+        Mockito.verify(this.repository, Mockito.times(1)).findById(ID);
+        Mockito.verify(this.repository, Mockito.times(1)).deleteById(ID);
     }
 
 }
