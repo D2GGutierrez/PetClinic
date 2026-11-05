@@ -69,7 +69,7 @@ public class PetServiceMockitoTest {
      *
      */
     @Test
-    public void testFindPetByName() {
+    public void testFindPetByName() throws InterruptedException {
 
         String FIND_NAME = "Leo";
 

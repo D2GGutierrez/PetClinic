@@ -58,7 +58,6 @@ public class VisitServiceMockitoTest {
         VisitDTO newVisitDTO = this.visitMapper.mapToDto(newVisit);
         VisitDTO hopeVisitDTOCreated = this.visitMapper.mapToDto(newVisitCreated);
 
-        // Cuando el servicio guarde "newVisit", el mock devolvera "newVisitCreated".
         Mockito.when(this.repository.save(newVisit))
                 .thenReturn(newVisitCreated);
 
@@ -69,8 +68,6 @@ public class VisitServiceMockitoTest {
         log.info("Visit created : {}", newVisitDTOCreated);
 
         // ------------ Validar ---------------
-
-        //            EXPECTED                           ACTUAL
         assertNotNull(newVisitDTOCreated.getId());
         assertEquals(hopeVisitDTOCreated.getId(), newVisitDTOCreated.getId());
         assertEquals(hopeVisitDTOCreated.getPetId(), newVisitDTOCreated.getPetId());
